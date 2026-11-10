@@ -33,8 +33,12 @@ jobs:
           mkdir -p dist
           build() { # GOOS GOARCH GOARM output
             echo "::group::$4"
+            # Android: wlynxg/anet (all released versions) go:linkname's into
+            # net.zoneCache, which the Go 1.23+ linker rejects by default.
+            extra=""
+            [ "$1" = android ] && extra="-checklinkname=0"
             GOOS=$1 GOARCH=$2 GOARM=$3 \
-              go build -ldflags "-s -w" -trimpath -o "dist/$4"
+              go build -ldflags "-s -w $extra" -trimpath -o "dist/$4"
             echo "::endgroup::"
           }
           build android arm64 ""  go2rtc_android_arm64
