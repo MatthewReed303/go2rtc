@@ -41,9 +41,11 @@ jobs:
               go build -ldflags "-s -w $extra" -trimpath -o "dist/$4"
             echo "::endgroup::"
           }
+          # android/arm64 links internally; android/arm and android/amd64 need
+          # cgo (NDK), so 32-bit phones and x86_64 emulators use the linux
+          # builds (fine below Android 11; on 11+ those fall back to RTSP).
           build android arm64 ""  go2rtc_android_arm64
-          build android arm   7   go2rtc_android_arm
-          build android amd64 ""  go2rtc_android_amd64
+          build linux   arm   7   go2rtc_linux_arm
           build linux   amd64 ""  go2rtc_linux_amd64
           build linux   arm64 ""  go2rtc_linux_arm64
           build windows amd64 ""  go2rtc_windows_amd64.exe
