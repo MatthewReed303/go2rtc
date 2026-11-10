@@ -77,6 +77,12 @@ func (c *Conn) AddTrack(media *core.Media, codec *core.Codec, track *core.Receiv
 		}
 	}
 
+	// CamStation: louder, clearer G.711 camera audio when GO2RTC_VOICE_BOOST
+	// is set (no-op otherwise). Runs first, on the camera's own packets.
+	if media.Kind == core.KindAudio {
+		sender.Handler = pcm.VoiceBoost(track.Codec, sender.Handler)
+	}
+
 	// TODO: rewrite this dirty logic
 	// maybe not best solution, but ActiveProducer connected before AddTrack
 	if c.Mode != core.ModeActiveProducer {

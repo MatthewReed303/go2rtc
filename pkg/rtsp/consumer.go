@@ -59,6 +59,12 @@ func (c *Conn) AddTrack(media *core.Media, codec *core.Codec, track *core.Receiv
 		sender.Handler = pcm.RepackG711(true, sender.Handler)
 	}
 
+	// CamStation: louder, clearer G.711 camera audio when GO2RTC_VOICE_BOOST
+	// is set (no-op otherwise).
+	if media.Kind == core.KindAudio {
+		sender.Handler = pcm.VoiceBoost(track.Codec, sender.Handler)
+	}
+
 	sender.HandleRTP(track)
 
 	c.Senders = append(c.Senders, sender)

@@ -30,7 +30,10 @@ jobs:
       - name: Build
         run: |
           set -euo pipefail
-          mkdir -p dist
+          # Build outside the checkout: an untracked dist/ made Go stamp the
+          # version as "dirty".
+          out="$RUNNER_TEMP/dist"
+          mkdir -p "$out"
           build() { # GOOS GOARCH GOARM output
             echo "::group::$4"
             # Android: wlynxg/anet (all released versions) go:linkname's into
@@ -38,7 +41,7 @@ jobs:
             extra=""
             [ "$1" = android ] && extra="-checklinkname=0"
             GOOS=$1 GOARCH=$2 GOARM=$3 \
-              go build -ldflags "-s -w $extra" -trimpath -o "dist/$4"
+              go build -ldflags "-s -w $extra" -trimpath -o "$out/$4"
             echo "::endgroup::"
           }
           # android/arm64 links internally; android/arm and android/amd64 need
@@ -50,6 +53,7 @@ jobs:
           build linux   arm64 ""  go2rtc_linux_arm64
           build windows amd64 ""  go2rtc_windows_amd64.exe
           build windows arm64 ""  go2rtc_windows_arm64.exe
+          mv "$out" dist
           cd dist
           sha256sum * > SHA256SUMS
           cat SHA256SUMS
