@@ -41,7 +41,7 @@ require (
 	github.com/pion/transport/v4 v4.1.1 // indirect
 	github.com/pion/transport/v5 v5.1.1 // indirect
 	github.com/pion/turn/v5 v5.1.3 // indirect
-	github.com/wlynxg/anet v0.0.5 // indirect
+	github.com/wlynxg/anet v0.0.5
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
